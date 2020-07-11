@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../hooks/AuthContext';
 import getValidationErros from '../../assets/utils/getValidationErros';
 
 import { Container, Content, Background } from './styles';

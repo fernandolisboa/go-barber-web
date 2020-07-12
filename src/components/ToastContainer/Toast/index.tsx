@@ -13,9 +13,10 @@ const icons = {
 
 interface ToastProps {
   toast: ToastMessage;
+  style: object;
 }
 
-const Toast: React.FC<ToastProps> = ({ toast }) => {
+const Toast: React.FC<ToastProps> = ({ toast, style }) => {
   const { removeToast } = useToast();
 
   useEffect(() => {
@@ -24,7 +25,11 @@ const Toast: React.FC<ToastProps> = ({ toast }) => {
   }, [removeToast, toast]);
 
   return (
-    <Container type={toast.type} hasDescription={!!toast.description}>
+    <Container
+      type={toast.type}
+      hasDescription={!!toast.description}
+      style={style}
+    >
       {icons[toast.type || 'info']}
 
       <div>

@@ -44,11 +44,10 @@ const SignIn: React.FC = () => {
           abortEarly: false,
         });
 
-        await signIn({ email: data.email, password: data.password });
+        await signIn(data);
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErros(err);
-
           formRef.current?.setErrors(errors);
 
           return;
@@ -83,7 +82,7 @@ const SignIn: React.FC = () => {
 
             <Button type="submit">Entrar</Button>
 
-            <a href="forgot">Esqueci minha senha</a>
+            <Link to="forgot">Esqueci minha senha</Link>
           </Form>
 
           <Link to="signup">

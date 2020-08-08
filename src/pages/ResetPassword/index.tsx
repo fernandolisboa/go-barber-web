@@ -1,9 +1,10 @@
 import React, { useRef, useCallback } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import { FiArrowLeft, FiLock } from 'react-icons/fi';
 import * as Yup from 'yup';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
+import queryString from 'query-string';
 
 import { useToast } from '../../hooks/toast';
 
@@ -25,7 +26,9 @@ interface ResetPasswordFormData {
 
 const ResetPassword: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
+
   const history = useHistory();
+  const location = useLocation();
 
   const { addToast } = useToast();
 
@@ -49,9 +52,16 @@ const ResetPassword: React.FC = () => {
           },
         );
 
+        const { token } = queryString.parse(location.search);
+
+        if (!token) {
+          throw new Error();
+        }
+
         await api.post('/password/reset', {
           password,
           password_confirmation,
+          token,
         });
 
         history.push('/');
@@ -71,7 +81,7 @@ const ResetPassword: React.FC = () => {
         });
       }
     },
-    [addToast, history],
+    [addToast, history, location.search],
   );
 
   return (

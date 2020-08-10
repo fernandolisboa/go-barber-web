@@ -36,7 +36,13 @@ const Profile: React.FC = () => {
   const history = useHistory();
 
   const handleSubmit = useCallback(
-    async (data: ProfileFormData) => {
+    async ({
+      name,
+      email,
+      old_password,
+      new_password,
+      password_confirmation,
+    }: ProfileFormData) => {
       try {
         formRef.current?.setErrors({});
 
@@ -45,21 +51,64 @@ const Profile: React.FC = () => {
           email: Yup.string()
             .required('O e-mail é obrigatório')
             .email('Digite um e-mail válido'),
-          password: Yup.string().min(6, 'A senha deve ter no mínimo 6 dígitos'),
+
+          old_password: Yup.string().when('new_password', {
+            is: (new_pass: string) => !!new_pass,
+            then: Yup.string().required(
+              'É obrigatório informar sua senha atual',
+            ),
+            otherwise: Yup.string(),
+          }),
+
+          new_password: Yup.string().test(
+            'empty-check',
+            'A senha deve ter no mínimo 6 dígitos',
+            password => password.length === 0 || password.length >= 6,
+          ),
+
+          password_confirmation: Yup.string().when('new_password', {
+            is: (new_pass: string) => !!new_pass,
+            then: Yup.string().oneOf(
+              [Yup.ref('new_password')],
+              'As senhas devem corresponder',
+            ),
+            otherwise: Yup.string(),
+          }),
         });
 
-        await schema.validate(data, {
-          abortEarly: false,
-        });
+        await schema.validate(
+          {
+            name,
+            email,
+            old_password,
+            new_password,
+            password_confirmation,
+          },
+          { abortEarly: false },
+        );
 
-        await api.post('users', data);
+        const formData = {
+          name,
+          email,
+          ...(new_password
+            ? {
+                old_password,
+                new_password,
+                password_confirmation,
+              }
+            : {}),
+        };
 
-        history.push('/');
+        const { data } = await api.put('/profile', formData);
+
+        updateUser(data);
+
+        history.push('/dashboard');
 
         addToast({
           type: 'success',
-          title: 'Perfil atualizado',
-          description: 'Seu perfil foi atualizado com sucesso!',
+          title: 'Perfil atualizado!',
+          description: 'Seu perfil foi atualizado com sucesso 😊',
         });
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
@@ -71,13 +120,13 @@ const Profile: React.FC = () => {
 
         addToast({
           type: 'error',
-          title: 'Erro na atualização de perfil',
+          title: 'Erro na atualização',
           description:
             'Ocorreu um erro ao tentar atualizar seu perfil. Tente novamente mais tarde.',
         });
       }
     },
-    [addToast, history],
+    [addToast, history, updateUser],
   );
 
   const handleAvatarChange = useCallback(

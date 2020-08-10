@@ -2,9 +2,25 @@ import styled from 'styled-components';
 import { shade } from 'polished';
 
 const Container = styled.div`
-  height: 100vh;
-  display: flex;
-  align-items: stretch;
+  > header {
+    height: 144px;
+    background: #28262e;
+
+    display: flex;
+    align-items: center;
+
+    div {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+
+      svg {
+        width: 24px;
+        height: 24px;
+        color: #999591;
+      }
+    }
+  }
 `;
 
 const Content = styled.div`
@@ -12,7 +28,7 @@ const Content = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin: 0 auto;
+  margin: -175px auto 0;
 
   width: 100%;
 
@@ -20,6 +36,9 @@ const Content = styled.div`
     margin: 80px 0;
     width: 340px;
     text-align: center;
+
+    display: flex;
+    flex-direction: column;
 
     h1 {
       margin-bottom: 24px;
@@ -41,4 +60,45 @@ const Content = styled.div`
   }
 `;
 
-export { Container, Content };
+const AvatarInput = styled.div`
+  margin-bottom: 32px;
+  position: relative;
+  align-self: center;
+
+  img {
+    width: 186px;
+    height: 186px;
+    border-radius: 50%;
+  }
+
+  button {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 0;
+
+    background: #ff9000;
+
+    right: 0;
+    bottom: 0;
+    position: absolute;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition: background-color 0.2s;
+
+    &:hover {
+      background: ${shade(0.2, '#ff9000')};
+    }
+
+    svg {
+      width: 20px;
+      height: 20px;
+      color: #312e38;
+    }
+  }
+`;
+
+export { Container, Content, AvatarInput };

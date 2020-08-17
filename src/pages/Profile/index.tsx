@@ -63,7 +63,7 @@ const Profile: React.FC = () => {
           new_password: Yup.string().test(
             'empty-check',
             'A senha deve ter no mínimo 6 dígitos',
-            password => password.length === 0 || password.length >= 6,
+            (password: string) => password.length === 0 || password.length >= 6,
           ),
 
           password_confirmation: Yup.string().when('new_password', {

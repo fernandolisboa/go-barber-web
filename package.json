@@ -34,6 +34,14 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/components/**/*.tsx",
+      "src/hooks/**/*.tsx",
+      "src/pages/**/*.tsx",
+      "!src/hooks/index.tsx"
+    ]
+  },
   "browserslist": {
     "production": [
       ">0.2%",
